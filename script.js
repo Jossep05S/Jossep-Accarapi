@@ -3,8 +3,8 @@
    Reemplace los valores vacíos antes de publicar el sitio.
    ================================================================= */
 const CONFIG = {
-  whatsapp: "",   // ← [NÚMERO DE WHATSAPP PENDIENTE]. Formato: 519XXXXXXXX (sin +, espacios ni guiones)
-  correo: "",     // ← [CORREO PENDIENTE]
+  whatsapp: "",   // Configure aquí el número de WhatsApp en formato 519XXXXXXXX (sin +, espacios ni guiones)
+  correo: "contacto@tapreviewjuliaca.pe",     // Correo de atención
   mensajeWA: "Hola, deseo recibir información académica sobre las placas NFC de Tappeame.",
   precioReferencial: 99.00,
   igv: 0.18
