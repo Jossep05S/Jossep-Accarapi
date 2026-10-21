@@ -1,3 +1,4 @@
+
 /* =================================================================
    A. CONFIGURACIÓN EDITABLE
    Reemplace los valores vacíos antes de publicar el sitio.
@@ -444,9 +445,41 @@ const CONFIG = {
     if (a && a.hash && $(a.hash)) setTimeout(() => enfocarSeccion(a.hash), reducido ? 0 : 80);
   });
 
+
+  /* ---------- Asistente IA local basado en el informe empresarial ---------- */
+  function responderAsistente(q){
+    const t=q.toLowerCase();
+    const respuestas=[
+      [/producto|vende|placa|nfc|qr/,"TapReview vende una placa física de mostrador de acrílico con base de madera, chip NFC NTAG213 configurado y código QR. Ambos llevan al enlace oficial del negocio: Google Maps, reseñas, WhatsApp, Instagram, menú o catálogo."],
+      [/precio|cuesta|valor|s\/|soles/,"El precio propuesto es S/ 99 por placa, con IGV incluido. El costo variable estimado es S/ 45.50 por unidad y el margen de contribución aproximado es S/ 38.40."],
+      [/costo|gasto|inversi[oó]n/,"La inversión inicial proyectada es S/ 6,000. Incluye activos tangibles, activos intangibles y capital de trabajo. Los gastos fijos del primer año se estiman en S/ 1,420 mensuales."],
+      [/punto de equilibrio|equilibrio/,"El punto de equilibrio proyectado es de aproximadamente 37 placas por mes. Desde la placa 38 se genera utilidad operativa positiva bajo los supuestos del informe."],
+      [/van|tir|beneficio|rentabilidad|financier/,"La proyección del informe presenta un VAN de S/ 16,561.73, una TIR de 87.64 %, una relación beneficio/costo de 1.08 y recuperación aproximada de 1.18 años. Son resultados proyectados, sujetos a ventas y costos reales."],
+      [/misi[oó]n|visi[oó]n|objetivo/,"La misión es facilitar que los negocios de Juliaca y Puno conecten a sus clientes con sus canales digitales mediante placas NFC y QR. El objetivo general es comercializar placas configuradas para mejorar ese acceso."],
+      [/proceso|funciona|configur/,"El proceso es: recibir el enlace oficial, verificarlo, generar el QR, programar el chip NFC, personalizar la placa, probar NFC y QR en varios teléfonos, y entregar o instalar el producto."],
+      [/foda|fortaleza|debilidad|oportunidad|amenaza/,"El FODA identifica como fortaleza la solución sencilla y local; como debilidad la dependencia inicial de proveedores y tercerización; como oportunidad el crecimiento de la presencia digital de negocios; y como amenaza la competencia y variación de costos."],
+      [/ods|desarrollo sostenible|sostenible/,"TapReview se relaciona con los ODS 8, 9, 12 y 17: actividad económica local, innovación tecnológica sencilla, uso prolongado de una placa durable y alianzas con proveedores y negocios."],
+      [/seguridad|pol[ií]tica/,"La política de seguridad indica que no se solicitan DNI, contraseñas ni datos bancarios; se verifica el enlace antes de programarlo; se prueban NFC y QR; y se recomienda operar con HTTPS, contraseñas seguras y accesos restringidos."],
+      [/acreditaci[oó]n|sineace/,"La Facultad de Ingeniería Económica de la UNA Puno se presenta con acreditación nacional asociada a SINEACE. La acreditación internacional se mantiene fuera de esta versión porque está en trámite."],
+      [/universidad|profesor|docente|estudiante|nombre/,"El proyecto corresponde a la Universidad Nacional del Altiplano, Facultad de Ingeniería Económica, curso de Informática Empresarial. Estudiante: Jossep Sleyther Accarapi Quispe. Docente: Escobar Mamani, Fortunato."],
+      [/hola|buenas|ayuda|qué puedes|que puedes/,"Puedo explicar el producto, precio, costos, inversión, proceso, FODA, misión, seguridad, ODS, VAN, TIR y la información institucional del proyecto. ¿Qué deseas conocer?"]
+    ];
+    const hallada=respuestas.find(([re])=>re.test(t));
+    return hallada?hallada[1]:"No encuentro esa pregunta de forma específica en el informe. Puedes preguntarme por el producto, precio, costos, inversión, punto de equilibrio, VAN, TIR, proceso, FODA, seguridad, ODS o acreditación SINEACE.";
+  }
+  function iniciarAsistente(){
+    const panel=$("#asistente"), abrir=$("#abrir-asistente"), cerrar=$("#cerrar-asistente"), form=$("#form-asistente"), entrada=$("#entrada-asistente"), lista=$("#asistente-mensajes");
+    if(!panel||!abrir||!form)return;
+    const enviar=q=>{q=q.trim();if(!q)return;const u=document.createElement("p");u.className="asistente-msg usuario";u.textContent=q;lista.appendChild(u);const b=document.createElement("p");b.className="asistente-msg bot";b.textContent=responderAsistente(q);lista.appendChild(b);lista.scrollTop=lista.scrollHeight;};
+    abrir.addEventListener("click",()=>{panel.hidden=false;abrir.hidden=true;entrada.focus();});
+    cerrar.addEventListener("click",()=>{panel.hidden=true;abrir.hidden=false;});
+    form.addEventListener("submit",e=>{e.preventDefault();enviar(entrada.value);entrada.value="";});
+    $$("[data-pregunta]").forEach(b=>b.addEventListener("click",()=>enviar(b.dataset.pregunta)));
+  }
+
   /* ---------- N. INICIO ---------- */
   pintarDisenos(); pintarGaleria(); pintarProceso(); pintarSegmentos(); pintarFAQ();
-  iniciarWA(); iniciarNavegacion(); iniciarReveal(); iniciarSimulador(); iniciarFormulario(); iniciarCookies();
+  iniciarWA(); iniciarNavegacion(); iniciarReveal(); iniciarSimulador(); iniciarFormulario(); iniciarCookies(); iniciarAsistente();
   medirAviso(); window.addEventListener("resize", medirAviso);
   $("#anio").textContent = new Date().getFullYear();
   revisarHash(); window.addEventListener("hashchange", revisarHash);
